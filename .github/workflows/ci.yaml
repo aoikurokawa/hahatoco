@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  security_audit:
+    name: security_audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install cargo-audit from crates.io
+        uses: baptiste0928/cargo-install@v3
+        with:
+          crate: cargo-audit
+          version: "0.21.1"
+      - run: cargo audit
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: rustfmt, clippy
+      - name: Install cargo-sort from crates.io
+        uses: baptiste0928/cargo-install@v3
+        with:
+          crate: cargo-sort
+          version: "1.0.9"
+      - run: cargo sort --workspace --check
+      - run: cargo fmt --all --check
+      - run: cargo clippy
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Building programs
+        run: cargo build --release
