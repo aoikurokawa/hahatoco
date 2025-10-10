@@ -21,10 +21,6 @@ struct Args {
     /// Output CSV file path
     #[arg(short, long, default_value = "validator_history_accounts.csv")]
     output: String,
-
-    /// Include account balances
-    #[arg(short, long, default_value = "true")]
-    include_balance: bool,
 }
 
 #[derive(Debug, Serialize)]
