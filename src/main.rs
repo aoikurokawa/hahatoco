@@ -1,11 +1,11 @@
+use std::{fs::File, str::FromStr};
+
 use anyhow::{Context, Result};
 use clap::Parser;
 use csv::Writer;
 use serde::Serialize;
 use solana_client::rpc_client::RpcClient;
 use solana_sdk::pubkey::Pubkey;
-use std::fs::File;
-use std::str::FromStr;
 
 // Constants
 const VALIDATOR_HISTORY_PROGRAM: &str = "HistoryJTGbKQD2mRgLZ3XhqHnN811Qpez8X9kCcGHoa";
